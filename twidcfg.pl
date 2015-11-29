@@ -53,13 +53,12 @@ while (<FH>) {
             $chordRepresentation |= $thumbMap{$mod};
         }
         my $shift = 0;
-        foreach my $chord (reverse(split(//, $chords))) {
+        foreach my $chord (split(//, $chords)) {
             $chordRepresentation |= ($buttonMap{$chord} << $shift);
             $shift += 4;
         }
-        # ERRATA: PDF says LSB first, but example is MSB first
-        pushb(\@chordMap, $chordRepresentation >> 8) or die;;
         pushb(\@chordMap, $chordRepresentation & 0xff) or die;
+        pushb(\@chordMap, $chordRepresentation >> 8) or die;;
         if ($keys =~ /,/) {
             pushb(\@chordMap, 0xff) or die;
             pushb(\@chordMap, scalar @stringTable) or die;
