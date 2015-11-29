@@ -2,6 +2,7 @@
 # Perl port of TwiddlerCfgConverter:
 # https://github.com/MarkoMarjamaa/TwiddlerCfgConverter
 use strict;
+use File::BOM qw(:all);
 
 my %buttonMap = ();
 $buttonMap{'O'}=0;
@@ -34,12 +35,15 @@ sub pushb {
     return -1;
 }
 
-while (<>) {
+open_bom(FH, $ARGV[0], ":utf8");
+while (<FH>) {
     chomp;
-    # Ignore comments, and leading/trailing whitespace
+   #  Ignore comments, and leading/trailing whitespace
     s/^#.*//; s/^\s*//; s/\s*$//;
     if ($_ eq ""){
         # Ignore empty lines
+        next;
+    } elsif ($_ eq "-- Chords --") {
         next;
     } else {
         my $chordRepresentation = 0;
@@ -53,9 +57,9 @@ while (<>) {
             $chordRepresentation |= ($buttonMap{$chord} << $shift);
             $shift += 4;
         }
-        $chordRepresentation >>= 4;
-        pushb(\@chordMap, $chordRepresentation & 0xff) or die;
+        # ERRATA: PDF says LSB first, but example is MSB first
         pushb(\@chordMap, $chordRepresentation >> 8) or die;;
+        pushb(\@chordMap, $chordRepresentation & 0xff) or die;
         if ($keys =~ /,/) {
             pushb(\@chordMap, 0xff) or die;
             pushb(\@chordMap, scalar @stringTable) or die;
@@ -82,10 +86,10 @@ my @mouseMap = (8,0,2,4,0,4,2,0,1,128,0,130,64,0,132,32,0,129,0,8,33,0,4,17,0,2,
 
 my $headerSize = 16;
 
-my $stringTableOffset = $headerSize;
-my $mouseMapOffset = $headerSize + scalar @stringTable;
-my $chordMapOffset = $headerSize + scalar @stringTable + scalar @mouseMap;
-my $options = 
+my $chordMapOffset = $headerSize;
+my $mouseMapOffset = $chordMapOffset + scalar @chordMap;
+my $stringTableOffset = $mouseMapOffset + scalar @mouseMap;
+
 #ConfigFormatVersion
 print chr(0x4);
 
@@ -107,7 +111,7 @@ print chr(0) x 8;
 # options
 print chr($OPT_MASS_STORAGE | $OPT_UNKNOWN);
 
-foreach my $b ((@stringTable, @mouseMap, @chordMap)) {
+foreach my $b ((@chordMap, @mouseMap, @stringTable)) {
     print chr($b);
 }
 
