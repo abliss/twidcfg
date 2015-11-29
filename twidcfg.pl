@@ -19,7 +19,7 @@ $thumbMap{"N"}=(0b0000000000000001);
 my @chordMap = ();
 my @stringTable = ();
 
-my $OPT_UNKNOWN = 1;
+my $OPT_UNKNOWN = 1;     # TODO errata: keyrepeat + mass = 5?
 my $OPT_KEY_REPEAT = 2;
 my $OPT_MASS_STORAGE = 4;
 
@@ -74,6 +74,8 @@ while (<>) {
     }
 }
 
+push(@stringTable, 0, 0); # TODO: errata: delimiter len 4?
+push(@chordMap, 0, 0, 0, 0);
 
 #TODO
 my @mouseMap = (8,0,2,4,0,4,2,0,1,128,0,130,64,0,132,32,0,129,0,8,33,0,4,17,0,2,65,0,128,161,0,64,10,0,32,9,0,0,0);
