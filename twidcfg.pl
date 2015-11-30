@@ -19,6 +19,7 @@ $thumbMap{"N"}=(0b0000000000000001);
 
 my @chordMap = ();
 my @stringTable = ();
+my $stringIndex = 0;
 
 my $OPT_UNKNOWN = 1;     # TODO errata: keyrepeat + mass = 5?
 my $OPT_KEY_REPEAT = 2;
@@ -36,6 +37,7 @@ sub pushb {
 }
 
 open_bom(FH, $ARGV[0], ":utf8");
+
 while (<FH>) {
     chomp;
    #  Ignore comments, and leading/trailing whitespace
@@ -61,14 +63,14 @@ while (<FH>) {
         pushb(\@chordMap, $chordRepresentation >> 8) or die;;
         if ($keys =~ /,/) {
             pushb(\@chordMap, 0xff) or die;
-            pushb(\@chordMap, scalar @stringTable) or die;
-            my @keyList = split($keys,/,/);
-            my $len = scalar @keyList;
+            pushb(\@chordMap, $stringIndex++) or die;
+            my @keyList = split(/,/, $keys);
+            my $len = 2 * (scalar @keyList) + 2;
             pushb(\@stringTable, $len & 0xff) or die;
             pushb(\@stringTable, $len >> 8) or die;
             foreach my $key (@keyList) {
-                pushb(\@stringTable, hex(substr($keys, 0, 2))) or die;
-                pushb(\@stringTable, hex(substr($keys, 2, 2))) or die;
+                pushb(\@stringTable, hex(substr($key, 0, 2))) or die;
+                pushb(\@stringTable, hex(substr($key, 2, 2))) or die;
             }
         } else {
             pushb(\@chordMap, hex(substr($keys, 0, 2))) or die;
@@ -77,7 +79,8 @@ while (<FH>) {
     }
 }
 
-push(@stringTable, 0, 0); # TODO: errata: delimiter len 4?
+ # ERRATA: PDF claims delimeter length 4, but actually it's 2
+push(@stringTable, 0, 0);
 push(@chordMap, 0, 0, 0, 0);
 
 #TODO

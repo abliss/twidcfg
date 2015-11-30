@@ -17,13 +17,13 @@
    O RRRR 0039 <caps lock>
    O MMMM 0053 <null>
   AN OOOL 0047 <scrolllock>
-   O ROOM 0004 a
-   O MLOO 0005 b
-   O MOOM 0006 c
-   O OLOO 0007 d
-   O LOOM 0008 e
-   O LMOO 0009 f
-   O MOOL 000A g
+   O OOOL 0004 a
+   O ROOM 0005 b
+   O MLOO 0006 c
+   O MOOM 0007 d
+   O OLOO 0008 e
+   O LOOM 0009 f
+   O LMOO 000A g
    O MOOO 000B h
    O LOOL 000C i
    O LORO 000D j
@@ -33,8 +33,8 @@
    O OOMO 0011 n
    O OOLO 0012 o
    O LLOO 0013 p
-   O LORO 0014 q
-   O MOLO 0015 r
+   O LRRO 0014 q
+   O OORO 0015 r
    O OOOM 0016 s
    O OMOO 0017 t
    O LOOO 0018 u
@@ -42,7 +42,7 @@
    O MROO 001A w
    O ROOL 001B x
    O LOOR 001C y
-   O OORR 001D z
+   O MOOR 001D z
    O ROOO 002C <Space>
    O ROLO 201E !
    O ROMO 2034 "
@@ -50,7 +50,7 @@
    O OLRO 2021 $
    O OORM 2022 %
    O OLOL 2024 &
-   O RMOO 0034 ‘
+   O OOLL 0034 '
    O OLLO 2026 (
    O ORLO 2027 )
    O OOLM 2025 *
@@ -115,11 +115,11 @@
    O ORRR 004A <Home>
    O OLLL 004D <End>
    O OORR 004B <PageUp>
-   O OOLL 004E <PageDown>
-   O OMRO 0052 <UpArrow>
-   O OMLO 0051 <DownArrow>
-   O OMMO 0050 <LeftArrow>
-   O OMOM 004F <RightArrow>
+#  O OOLL 004E <PageDown>
+   O OMLO 0052 <UpArrow>
+   O OMRO 0051 <DownArrow>
+   O OMOM 0050 <LeftArrow>
+   O OMMO 004F <RightArrow>
    O ORRO 0007 a
    S ORRO 0007 a
    O ORMO 0007 a
