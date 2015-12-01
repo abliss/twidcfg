@@ -20,6 +20,7 @@ $thumbMap{"N"}=(0b0000000000000001);
 my @chordMap = ();
 my @stringTable = ();
 my $stringIndex = 0;
+my %used = ();
 
 my $OPT_UNKNOWN = 1;     # TODO errata: keyrepeat + mass = 5?
 my $OPT_KEY_REPEAT = 2;
@@ -41,7 +42,7 @@ open_bom(FH, $ARGV[0], ":utf8");
 while (<FH>) {
     chomp;
    #  Ignore comments, and leading/trailing whitespace
-    s/^#.*//; s/^\s*//; s/\s*$//;
+    s/#.*//; s/^\s*//; s/\s*$//;
     if ($_ eq ""){
         # Ignore empty lines
         next;
@@ -59,6 +60,10 @@ while (<FH>) {
             $chordRepresentation |= ($buttonMap{$chord} << $shift);
             $shift += 4;
         }
+        if ($used{$chordRepresentation}) {
+            print STDERR "WARNING: remapping $_ at $.\n";
+        }
+        $used{$chordRepresentation} = 1;
         pushb(\@chordMap, $chordRepresentation & 0xff) or die;
         pushb(\@chordMap, $chordRepresentation >> 8) or die;;
         if ($keys =~ /,/) {
@@ -111,7 +116,7 @@ printTwoByteLsb($stringTableOffset);
 print chr(0) x 8;
 
 # options
-print chr($OPT_MASS_STORAGE | $OPT_UNKNOWN);
+print chr($OPT_MASS_STORAGE);
 
 foreach my $b ((@chordMap, @mouseMap, @stringTable)) {
     print chr($b);
